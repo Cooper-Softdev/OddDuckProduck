@@ -18,4 +18,4 @@ Contributors are me, myself, and I.
 
 ## License
 
-MIT license, because I don't know what the others do.
+MIT LICENSE, because I don't know what the others do.
