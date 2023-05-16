@@ -1,16 +1,17 @@
 'use strict';
 
-let votingRounds = 15;
+let votingRounds = 25;
 let productArr = [];
 let productsShown = [];
 
 function productConstructor(name, altText) {
   this.name = name;
-  this.image = 'img/' + name + '.jpg';
+  this.image = `img/${name}.jpg`;
   this.altText = altText;
   this.votes = 0;
   this.views = 0;
 }
+
 
 function genRndmProducts() {
   let randomNumbers = [];
@@ -73,17 +74,26 @@ function displayResults() {
 
   let resultsSidebar = document.querySelector('#resultsList');
 
-  productArr.forEach(product => {
-    let listItem = document.createElement('li');
-    listItem.textContent = `${product.name}: ${product.votes} votes`;
-    resultsSidebar.appendChild(listItem);
+  let showResultsButton = document.createElement('button');
+  showResultsButton.textContent = 'Show Results';
+  showResultsButton.addEventListener('click', function() {
+    productArr.forEach(product => {
+      let listItem = document.createElement('li');
+      listItem.textContent = `${product.name}: ${product.votes} votes seen ${product.views} times` + '\n';
+      resultsSidebar.appendChild(listItem);
+    });
 
     let footer = document.querySelector('.footer');
     let newParagraph = document.createElement('p');
     newParagraph.textContent = 'Thank-you for voting subject #[USER ALPHANUMERIC], the system rejoices in your compliance. You\'ve always been one of our favorites, so please come back anytime and remember, we\'re never more than a click away.';
     footer.appendChild(newParagraph);
+
+    resultsSidebar.removeChild(showResultsButton);
   });
+
+  resultsSidebar.appendChild(showResultsButton);
 }
+
 
 
 let bag = new productConstructor('bag', 'an r2-d2 shaped luggage');

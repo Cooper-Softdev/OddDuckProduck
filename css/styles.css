@@ -1,16 +1,4 @@
 
-/* .parent {
-  display: grid;
-  background-color: aqua;
-  background: linear-gradient(to right, #00dbde, #fc00ff);
-  width: 90%;
-  height: 90%;
-  margin: auto;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  grid-gap: 10px;
-} */
-
 .parent {
   display: grid;
   width: 90%;
@@ -28,6 +16,18 @@
   font-size: 1.5em;
   padding: 30px;
 }
+
+#resultsList {
+  list-style: none;
+  font-size: 17px;
+  padding-top: 10px;
+}
+
+#resultsList li {
+  margin-bottom: 10px;
+}
+
+
 
 img {
   max-width: 100%;
