@@ -13,7 +13,26 @@ function ProductConstructor(name, altText) {
   this.views = 0;
 }
 
-let currentIndex = 0;
+function saveToLocalStorage() {
+  localStorage.setItem('products', JSON.stringify(productArr));
+}
+
+function loadFromLocalStorage() {
+  const productData = localStorage.getItem('products');
+
+  if (productData) {
+    let storedProducts = JSON.parse(productData);
+
+    for (let i = 0; i < storedProducts.length; i++) {
+      let dataReconstructed = new ProductConstructor (storedProducts[i].name, storedProducts[i].altText);
+      dataReconstructed.votes = storedProducts[i].votes;
+      dataReconstructed.views = storedProducts[i].views;
+      productArr.push(dataReconstructed);
+    }
+  } else {
+    productArr.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass);
+  }
+}
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -22,16 +41,18 @@ function shuffleArray(array) {
   }
 }
 
+let currentIndex = 0;
+
 function genRndmProducts() {
   if (currentIndex + 2 >= productArr.length) {
     shuffleArray(productArr);
     currentIndex = 0;
   }
 
-  let products = [productArr[currentIndex], productArr[currentIndex + 1], productArr[currentIndex + 2]];
+  let randomProductArr = [productArr[currentIndex], productArr[currentIndex + 1], productArr[currentIndex + 2]];
   currentIndex += 3;
 
-  return products;
+  return randomProductArr;
 }
 
 function renderProducts() {
@@ -75,6 +96,7 @@ function handleVote() {
     document.getElementById('img1').removeEventListener('click', handleVote);
     document.getElementById('img2').removeEventListener('click', handleVote);
     document.getElementById('img3').removeEventListener('click', handleVote);
+    saveToLocalStorage();
     displayResults();
   } else {
     renderProducts();
@@ -94,18 +116,18 @@ function displayResults() {
       listItem.textContent = `${product.name}: ${product.votes} votes seen ${product.views} times` + '\n';
       resultsSidebar.appendChild(listItem);
     });
-  
+
     let footer = document.querySelector('.footer');
     let newParagraph = document.createElement('p');
     newParagraph.textContent = 'Thank-you for voting subject #[USER ALPHANUMERIC], the system rejoices in your compliance. You\'ve always been one of our favorites, so please come back anytime and remember, we\'re never more than a click away.';
     footer.appendChild(newParagraph);
-  
+
     resultsSidebar.removeChild(showResultsButton);
-  
+
     let productNames = productArr.map(product => product.name);
     let productViews = productArr.map(product => product.views);
     let productVotes = productArr.map(product => product.votes);
-  
+
     new Chart(ctx, {
       type: 'bar',
       data: {
@@ -135,8 +157,7 @@ function displayResults() {
       },
     });
   });
-  resultsSidebar.appendChild(showResultsButton)
-  ;
+  resultsSidebar.appendChild(showResultsButton);
 }
 
 
@@ -162,5 +183,6 @@ let wineglass = new ProductConstructor('wineglass', 'a wine glass with a hole in
 
 productArr.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass);
 
+loadFromLocalStorage();
 shuffleArray(productArr);
 renderProducts();
