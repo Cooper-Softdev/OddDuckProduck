@@ -3,7 +3,7 @@
 let votingRounds = 50;
 let productArr = [];
 let productsShown = [];
-
+let ctx = document.getElementById('myChart');
 
 function ProductConstructor(name, altText) {
   this.name = name;
@@ -12,7 +12,6 @@ function ProductConstructor(name, altText) {
   this.votes = 0;
   this.views = 0;
 }
-
 
 let currentIndex = 0;
 
@@ -34,8 +33,6 @@ function genRndmProducts() {
 
   return products;
 }
-
-
 
 function renderProducts() {
   let randomProducts = genRndmProducts();
@@ -97,18 +94,50 @@ function displayResults() {
       listItem.textContent = `${product.name}: ${product.votes} votes seen ${product.views} times` + '\n';
       resultsSidebar.appendChild(listItem);
     });
-
+  
     let footer = document.querySelector('.footer');
     let newParagraph = document.createElement('p');
     newParagraph.textContent = 'Thank-you for voting subject #[USER ALPHANUMERIC], the system rejoices in your compliance. You\'ve always been one of our favorites, so please come back anytime and remember, we\'re never more than a click away.';
     footer.appendChild(newParagraph);
-
+  
     resultsSidebar.removeChild(showResultsButton);
+  
+    let productNames = productArr.map(product => product.name);
+    let productViews = productArr.map(product => product.views);
+    let productVotes = productArr.map(product => product.votes);
+  
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: productNames,
+        datasets: [{
+          label: 'Views',
+          data: productViews,
+          borderWidth: 5,
+          backgroundColor: 'orange',
+          borderColor: 'orange'
+        },
+        {
+          label: 'Votes',
+          data: productVotes,
+          borderWidth: 5,
+          backgroundColor: 'black',
+          borderColor: 'black',
+        }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      },
+    });
   });
-
-  resultsSidebar.appendChild(showResultsButton);
+  resultsSidebar.appendChild(showResultsButton)
+  ;
 }
-
 
 
 let bag = new ProductConstructor('bag', 'an r2-d2 shaped luggage');
