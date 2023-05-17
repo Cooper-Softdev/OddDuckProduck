@@ -6,7 +6,7 @@ A simple webapp for voting on some products that our customers would like to see
 
 ## Motivation
 
-Capitalism runs abound untether by worldly constraints, we must sell produck or inevitably fail when the board of directors comes knocking.
+Capitalism runs abound untethered by worldly constraints, we must sell produck or inevitably fail when the board of directors comes knocking.
 
 ## Installation
 
