@@ -1,9 +1,22 @@
 'use strict';
 
 let votingRounds = 50;
-let productArr = [];
+// let productArr = [];
+let productArr = loadStoredProductArr() || [];
 let productsShown = [];
 let ctx = document.getElementById('myChart');
+
+function loadStoredProductArr() {
+  let tempProductArr = [];
+  if (localStorage.getItem('storedProductArr') !== null) {
+    let retrievedProductArr = localStorage.getItem('storedProductArr');
+    tempProductArr = JSON.parse(retrievedProductArr);
+  } else {
+    tempProductArr = null;
+  }
+  return tempProductArr;
+}
+
 
 function ProductConstructor(name, altText) {
   this.name = name;
@@ -13,26 +26,6 @@ function ProductConstructor(name, altText) {
   this.views = 0;
 }
 
-function saveToLocalStorage() {
-  localStorage.setItem('products', JSON.stringify(productArr));
-}
-
-function loadFromLocalStorage() {
-  const productData = localStorage.getItem('products');
-
-  if (productData) {
-    let storedProducts = JSON.parse(productData);
-
-    for (let i = 0; i < storedProducts.length; i++) {
-      let dataReconstructed = new ProductConstructor (storedProducts[i].name, storedProducts[i].altText);
-      dataReconstructed.votes = storedProducts[i].votes;
-      dataReconstructed.views = storedProducts[i].views;
-      productArr.push(dataReconstructed);
-    }
-  } else {
-    productArr.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass);
-  }
-}
 
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -91,43 +84,50 @@ function handleVote() {
     }
   }
   votingRounds--;
-
+  // saveToLocalStorage
+  let stringifiedProductArr = JSON.stringify(productArr);
+  localStorage.setItem('storedProductArr', stringifiedProductArr);
   if (votingRounds === 0) {
     document.getElementById('img1').removeEventListener('click', handleVote);
     document.getElementById('img2').removeEventListener('click', handleVote);
     document.getElementById('img3').removeEventListener('click', handleVote);
-    saveToLocalStorage();
     displayResults();
+
   } else {
     renderProducts();
   }
 }
 
 function displayResults() {
+
   productArr.sort((a, b) => b.votes - a.votes);
 
-  let resultsSidebar = document.querySelector('#resultsList');
-
+  let resultsList = document.querySelector('#resultsList');
+  
   let showResultsButton = document.createElement('button');
   showResultsButton.textContent = 'Show Results';
+  resultsList.appendChild(showResultsButton);
+  
   showResultsButton.addEventListener('click', function() {
     productArr.forEach(product => {
       let listItem = document.createElement('li');
       listItem.textContent = `${product.name}: ${product.votes} votes seen ${product.views} times` + '\n';
-      resultsSidebar.appendChild(listItem);
+      resultsList.appendChild(listItem);
     });
-
+  
     let footer = document.querySelector('.footer');
     let newParagraph = document.createElement('p');
     newParagraph.textContent = 'Thank-you for voting subject #[USER ALPHANUMERIC], the system rejoices in your compliance. You\'ve always been one of our favorites, so please come back anytime and remember, we\'re never more than a click away.';
     footer.appendChild(newParagraph);
-
-    resultsSidebar.removeChild(showResultsButton);
+  
+    resultsList.removeChild(showResultsButton);
+  
+  
 
     let productNames = productArr.map(product => product.name);
     let productViews = productArr.map(product => product.views);
     let productVotes = productArr.map(product => product.votes);
-
+  
     new Chart(ctx, {
       type: 'bar',
       data: {
@@ -157,32 +157,31 @@ function displayResults() {
       },
     });
   });
-  resultsSidebar.appendChild(showResultsButton);
 }
 
+if (productArr.length === 0) {
+  let bag = new ProductConstructor('bag', 'an r2-d2 shaped luggage');
+  let banana = new ProductConstructor('banana' , 'a sliced up banana, ouch!');
+  let bathroom = new ProductConstructor('bathroom' , 'iPad and toilet paper holder');
+  let boots = new ProductConstructor('boots', 'open toe rainboots');
+  let breakfast = new ProductConstructor('breakfast', 'an all-in-one breakfast maker');
+  let bubblegum = new ProductConstructor('bubblegum', 'meat flavored chewing gum');
+  let chair = new ProductConstructor('chair', 'a chair with a big hump in the middle for convex shaped ass');
+  let cthulhu = new ProductConstructor('cthulhu', 'a cthulu action figure holding an army man');
+  let dogduck = new ProductConstructor('dogduck', 'dog in a duck costume');
+  let dragon = new ProductConstructor('dragon' ,'dragon meat in a can');
+  let pen = new ProductConstructor('pen', 'a set of kitchen utensils that double as a bic pen');
+  let petsweep = new ProductConstructor('petsweep', 'dust booties for your dog');
+  let scissors = new ProductConstructor('scissors', 'pizza scissors');
+  let shark = new ProductConstructor('shark', 'shark sized and shaped sleeping bag');
+  let sweep = new ProductConstructor('sweep', 'a baby onesy that doubles as a sweeper');
+  let tauntaun = new ProductConstructor('tauntaun', 'a tauntaun sized and shaped sleeping bag');
+  let unicorn = new ProductConstructor('unicorn', 'unicorn meat in a spam can, radiantly delicious!');
+  let watercan = new ProductConstructor('watercan','a water can for sprinkling plant but it feeds back into itself so you never run out of water');
+  let wineglass = new ProductConstructor('wineglass', 'a wine glass with a hole in the side of the glass');
 
-let bag = new ProductConstructor('bag', 'an r2-d2 shaped luggage');
-let banana = new ProductConstructor('banana' , 'a sliced up banana, ouch!');
-let bathroom = new ProductConstructor('bathroom' , 'iPad and toilet paper holder');
-let boots = new ProductConstructor('boots', 'open toe rainboots');
-let breakfast = new ProductConstructor('breakfast', 'an all-in-one breakfast maker');
-let bubblegum = new ProductConstructor('bubblegum', 'meat flavored chewing gum');
-let chair = new ProductConstructor('chair', 'a chair with a big hump in the middle for convex shaped ass');
-let cthulhu = new ProductConstructor('cthulhu', 'a cthulu action figure holding an army man');
-let dogduck = new ProductConstructor('dogduck', 'dog in a duck costume');
-let dragon = new ProductConstructor('dragon' ,'dragon meat in a can');
-let pen = new ProductConstructor('pen', 'a set of kitchen utensils that double as a bic pen');
-let petsweep = new ProductConstructor('petsweep', 'dust booties for your dog');
-let scissors = new ProductConstructor('scissors', 'pizza scissors');
-let shark = new ProductConstructor('shark', 'shark sized and shaped sleeping bag');
-let sweep = new ProductConstructor('sweep', 'a baby onesy that doubles as a sweeper');
-let tauntaun = new ProductConstructor('tauntaun', 'a tauntaun sized and shaped sleeping bag');
-let unicorn = new ProductConstructor('unicorn', 'unicorn meat in a spam can, radiantly delicious!');
-let watercan = new ProductConstructor('watercan','a water can for sprinkling plant but it feeds back into itself so you never run out of water');
-let wineglass = new ProductConstructor('wineglass', 'a wine glass with a hole in the side of the glass');
+  productArr.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass);
+}
 
-productArr.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass);
-
-loadFromLocalStorage();
 shuffleArray(productArr);
 renderProducts();
