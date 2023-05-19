@@ -1,11 +1,12 @@
 'use strict';
-
+//declaring globals that the app will use
 let votingRounds = 25;
-// let productArr = [];
+// checks for local storage and sets the storage to the value of productArr after parsing, if not sets to an empty array
 let productArr = loadStoredProductArr() || [];
 let productsShown = [];
 let ctx = document.getElementById('myChart');
 
+// checking lcal storage function for productArr
 function loadStoredProductArr() {
   let tempProductArr = [];
   if (localStorage.getItem('storedProductArr') !== null) {
@@ -17,7 +18,7 @@ function loadStoredProductArr() {
   return tempProductArr;
 }
 
-
+// constructor for product objects
 function ProductConstructor(name, altText) {
   this.name = name;
   this.image = `img/${name}.jpg`;
@@ -26,7 +27,7 @@ function ProductConstructor(name, altText) {
   this.views = 0;
 }
 
-
+// Fisher-Yates shuffle algorithm for the productArr.
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
@@ -34,8 +35,8 @@ function shuffleArray(array) {
   }
 }
 
+// checks array length, if not long enough then shuffles the array and resets the currentIndex
 let currentIndex = 0;
-
 function genRndmProducts() {
   if (currentIndex + 2 >= productArr.length) {
     shuffleArray(productArr);
@@ -48,6 +49,7 @@ function genRndmProducts() {
   return randomProductArr;
 }
 
+// displays the images to the page
 function renderProducts() {
   let randomProducts = genRndmProducts();
 
@@ -74,6 +76,7 @@ document.getElementById('img1').addEventListener('click', handleVote);
 document.getElementById('img2').addEventListener('click', handleVote);
 document.getElementById('img3').addEventListener('click', handleVote);
 
+// function that increments the votes global variable and decrements the votingRounds
 function handleVote() {
   let clickedProduct = event.target.title;
 
@@ -98,6 +101,7 @@ function handleVote() {
   }
 }
 
+// displays the results obviously, and creates the graph at the same time.
 function displayResults() {
 
   productArr.sort((a, b) => b.votes - a.votes);
@@ -158,7 +162,7 @@ function displayResults() {
     });
   });
 }
-
+// all the product objects
 if (productArr.length === 0) {
   let bag = new ProductConstructor('bag', 'an r2-d2 shaped luggage');
   let banana = new ProductConstructor('banana' , 'a sliced up banana, ouch!');
@@ -182,6 +186,6 @@ if (productArr.length === 0) {
 
   productArr.push(bag, banana, bathroom, boots, breakfast, bubblegum, chair, cthulhu, dogduck, dragon, pen, petsweep, scissors, shark, sweep, tauntaun, unicorn, watercan, wineglass);
 }
-
+// shuffles the array on initial load of the page so you always start with a unique array
 shuffleArray(productArr);
 renderProducts();
