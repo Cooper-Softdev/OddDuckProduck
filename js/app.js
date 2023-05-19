@@ -1,6 +1,6 @@
 'use strict';
 
-let votingRounds = 50;
+let votingRounds = 25;
 // let productArr = [];
 let productArr = loadStoredProductArr() || [];
 let productsShown = [];
